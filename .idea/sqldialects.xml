@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2/Functii.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2/Problema1.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2/Problema2.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2/Problema3.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2/Problema4.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2/Problema5.sql" dialect="Oracle" />
   </component>
 </project>
