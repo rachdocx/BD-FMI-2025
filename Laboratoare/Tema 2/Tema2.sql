@@ -33,3 +33,19 @@ WHERE c.id_client NOT IN (
 );
 
 --3
+select *
+from(
+select
+    c.NUME,
+    sum((r.DATA_CHECK_OUT-r.DATA_CHECK_IN)*p.PRET_PER_NOAPTE) as bani
+from CLIENTI c
+join REZERVARI r on c.ID_CLIENT = r.ID_CLIENT
+join PROPRIETATI p on r.ID_PROPRIETATE = p.ID_PROPRIETATE
+group by c.NUME
+order by bani desc)
+where rownum<=(
+    select count(distinct r.ID_PROPRIETATE)
+    from PROPRIETATI p
+    join REZERVARI r on p.ID_PROPRIETATE = r.ID_PROPRIETATE
+    where to_char(r.DATA_CHECK_IN, 'YYYY') = '2025'
+);
