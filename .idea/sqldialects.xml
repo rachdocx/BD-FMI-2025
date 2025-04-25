@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2-3/Functii.sql" dialect="Oracle" />
-    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2-3/Problema1.sql" dialect="Oracle" />
-    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2-3/Problema2.sql" dialect="Oracle" />
-    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2-3/Problema3.sql" dialect="Oracle" />
-    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2-3/Problema4.sql" dialect="Oracle" />
-    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2-3/Problema5.sql" dialect="Oracle" />
-    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2-3/Problema6.sql" dialect="Oracle" />
-    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 2-3/Problema7.sql" dialect="Oracle" />
-    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator4/Functii.sql" dialect="Oracle" />
-    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator4/Problema3.sql" dialect="Oracle" />
-    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator4/Problema6.sql" dialect="Oracle" />
-    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator4/Problema7.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 1-3/Functii.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 1-3/Problema1.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 1-3/Problema2.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 1-3/Problema3.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 1-3/Problema4.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 1-3/Problema5.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 1-3/Problema6.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator 1-3/Problema7.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator4-5/Functii.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator4-5/Problema3.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator4-5/Problema6.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/Laboratoare/Laborator4-5/Problema7.sql" dialect="Oracle" />
     <file url="file://$PROJECT_DIR$/Laboratoare/Laborator6/Probleme.sql" dialect="Oracle" />
     <file url="file://$PROJECT_DIR$/Laboratoare/Laborator7/Probleme.sql" dialect="Oracle" />
     <file url="file://$PROJECT_DIR$/Laboratoare/Tema 1/Tema1.sql" dialect="Oracle" />
