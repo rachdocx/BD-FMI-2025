@@ -25,8 +25,8 @@ CREATE SEQUENCE SEQ_PRODUCT
 
 CREATE TABLE ALBUM (
     id_product NUMBER(3,0) CONSTRAINT pk_album PRIMARY KEY,
-    album_name VARCHAR2(100), -- Adăugat numele albumului conform documentației
-    length CHAR(5), -- Modificat tipul de date conform documentației
+    album_name VARCHAR2(100),
+    length CHAR(5),
     id_record_label NUMBER(3,0),
     CONSTRAINT fk_album_product FOREIGN KEY (id_product) REFERENCES PRODUCT(id_product),
     CONSTRAINT fk_album_label FOREIGN KEY (id_record_label) REFERENCES RECORD_LABEL(id_record_label)
@@ -53,18 +53,23 @@ CREATE SEQUENCE SEQ_GENRE
     NOCYCLE;
 
 CREATE TABLE ARTIST (
-    id_product NUMBER(3,0) CONSTRAINT pk_artist PRIMARY KEY,
+    id_artist NUMBER(3,0) CONSTRAINT pk_artist PRIMARY KEY,
     first_name VARCHAR2(100),
     last_name VARCHAR2(100),
-    band VARCHAR2(100),
-    CONSTRAINT fk_artist_product FOREIGN KEY (id_product) REFERENCES PRODUCT(id_product)
+    band VARCHAR2(100)
 );
+
+CREATE SEQUENCE SEQ_ARTIST
+    INCREMENT BY 1
+    START WITH 1
+    MAXVALUE 1000
+    NOCYCLE;
 
 CREATE TABLE PROVIDER (
     id_provider NUMBER(3,0) CONSTRAINT pk_provider PRIMARY KEY,
     provider_name VARCHAR2(100),
     phone_number CHAR(11),
-    address VARCHAR2(100) -- Corectat din adress în address
+    address VARCHAR2(100)
 );
 
 CREATE SEQUENCE SEQ_PROVIDER
@@ -121,7 +126,7 @@ CREATE TABLE CUSTOMER (
     id_customer NUMBER(3,0) CONSTRAINT pk_customer PRIMARY KEY,
     last_name VARCHAR2(100),
     first_name VARCHAR2(100),
-    address VARCHAR2(300), -- Corectat din adress în address
+    address VARCHAR2(300),
     city VARCHAR2(100)
 );
 
@@ -167,12 +172,12 @@ CREATE SEQUENCE SEQ_PURCHASE
     NOCYCLE;
 
 CREATE TABLE SONG (
-    id_song NUMBER(3,0) CONSTRAINT pk_song PRIMARY KEY, -- Redenumit din id_track_list în id_song
+    id_song NUMBER(3,0) CONSTRAINT pk_song PRIMARY KEY,
     id_artist NUMBER(3,0),
     id_product NUMBER(3,0),
     title VARCHAR2(100),
-    length VARCHAR2(100), -- Corectat din length în length
-    CONSTRAINT fk_song_artist FOREIGN KEY (id_artist) REFERENCES ARTIST(id_product),
+    length VARCHAR2(100),
+    CONSTRAINT fk_song_artist FOREIGN KEY (id_artist) REFERENCES ARTIST(id_artist),
     CONSTRAINT fk_song_product FOREIGN KEY (id_product) REFERENCES PRODUCT(id_product)
 );
 
