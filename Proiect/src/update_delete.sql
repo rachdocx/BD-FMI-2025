@@ -20,27 +20,24 @@ UPDATE STOCK s
 SET s.quantity = s.quantity - (
     SELECT SUM(p.quantity)
     FROM PURCHASE p
-    WHERE p.id_product = s.id_product
+    WHERE p.status = 'Pending'
+    AND p.id_product = s.id_product
 )
-WHERE s.id_stock IN (
-    SELECT id_stock
-    FROM (
-        SELECT id_stock
-        FROM STOCK s1
-        WHERE EXISTS (
-            SELECT 1 FROM PURCHASE p
-            WHERE p.id_product = s1.id_product
-        )
-        ORDER BY id_product, id_stock
-    )
-    WHERE ROWNUM = 1
+WHERE EXISTS (
+    SELECT 1
+    FROM PURCHASE p
+    WHERE p.status = 'Pending'
+    AND p.id_product = s.id_product
+)
+AND s.id_stock = (
+    SELECT MIN(s2.id_stock)
+    FROM STOCK s2
+    WHERE s2.id_product = s.id_product
 );
+
+UPDATE PURCHASE
+SET status = 'Completed'
+WHERE status = 'Pending';
 --b)
 DELETE FROM STOCK
-WHERE quantity <= (
-    SELECT NVL(SUM(p.quantity), 0)
-    FROM PURCHASE p
-    WHERE p.id_product = STOCK.id_product
-);
-
-
+WHERE quantity <= 0;
