@@ -1,9 +1,11 @@
 -- 1
-SELECT nume, count(distinct ID_ARTIST_DESCHIDERE)
+SELECT a.nume, count(a.nume)
 FROM ARTISTI A
 JOIN TURNEE T ON A.ID_ARTIST = T.ID_ARTIST
 JOIN CONCERTE C ON C.ID_TURNEU = T.ID_TURNEU
-group by nume;
+JOIN ARTISTI D ON C.ID_ARTIST_DESCHIDERE = D.ID_ARTIST
+where lower(d.tip) = 'formatie'
+group by A.nume;
 
 --2
 SELECT
