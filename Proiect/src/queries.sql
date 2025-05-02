@@ -74,17 +74,18 @@ SELECT
     c.city,
     COUNT(p.id_purchase) AS purchase_count,
     SUM(p.quantity) AS total_items,
-    DECODE(AVG(pur.price), NULL, 0, ROUND(AVG(pur.price), 2)) AS avg_price,
+    NVL(SUM(p.quantity * pur.price), 0) AS total_spent,
     NVL(MAX(TO_CHAR(p.purchase_date, 'YYYY-MM-DD')), 'Never purchased') AS last_purchase,
-    DECODE(COUNT(DISTINCT a.id_product), 0, 'No albums', 
-           CASE WHEN COUNT(DISTINCT a.id_product) > 2 THEN 'Music lover'
-                ELSE 'Casual listener' END) AS customer_type
+    DECODE(COUNT(DISTINCT a.id_product), 0, 'New Here', 
+           CASE WHEN COUNT(DISTINCT a.id_product) > 2 THEN 'Music lLover'
+                ELSE 'Casual istener' END) AS customer_type
 FROM CUSTOMER c
 LEFT JOIN PURCHASE p ON c.id_customer = p.id_customer
 LEFT JOIN PRODUCT pur ON p.id_product = pur.id_product
 LEFT JOIN ALBUM a ON p.id_product = a.id_product
 GROUP BY c.last_name, c.first_name, c.city
-ORDER BY purchase_count DESC, avg_price DESC;
+ORDER BY purchase_count DESC, total_spent ASC;
+
 
 --6
 -- Cererea 5: Funcții șiruri, date, expresia CASE, WITH
@@ -115,3 +116,5 @@ JOIN SONG s ON s.id_artist = am.id_artist
 JOIN PRODUCT p ON s.id_product = p.id_product
 GROUP BY am.artist_name, am.album_count, am.song_count
 ORDER BY am.song_count DESC;
+
+
