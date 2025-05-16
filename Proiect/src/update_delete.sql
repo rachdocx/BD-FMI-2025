@@ -1,43 +1,43 @@
 --1
-UPDATE PRODUCT
-SET price = price * 1.2
-WHERE id_product IN (
-    SELECT id_album
-    FROM GENRE
-    WHERE UPPER(genre_name) = 'POP'
+UPDATE PRODUS
+SET pret = pret * 1.2
+WHERE id_produs IN (
+    SELECT alb.id_produs
+    FROM ALBUM alb
+    JOIN GEN g ON alb.id_gen = g.id_gen
+    WHERE UPPER(g.nume_gen) = 'POP'
 );
 --2
-UPDATE EMPLOYEE
-SET salary = salary * 0.75
-WHERE id_function IN (
-    SELECT id_function
-    FROM FUNCTION
-    WHERE function_name = 'IT Support'
+UPDATE ANGAJAT
+SET salariu = salariu * 0.75
+WHERE id_functie IN (
+    SELECT id_functie
+    FROM FUNCTIE
+    WHERE nume_functie = 'IT Support'
 );
 --3
 --a)
-UPDATE STOCK s
-SET s.quantity = s.quantity - (
-    SELECT SUM(p.quantity)
-    FROM PURCHASE p
-    WHERE p.status = 'Pending'
-    AND p.id_product = s.id_product
+UPDATE STOC s
+SET s.cantitate = s.cantitate - (
+    SELECT SUM(ach.cantitate)
+    FROM ACHIZITIE ach
+    WHERE ach.status = 'Pending'
+    AND ach.id_produs = s.id_produs
 )
 WHERE EXISTS (
     SELECT 1
-    FROM PURCHASE p
-    WHERE p.status = 'Pending'
-    AND p.id_product = s.id_product
+    FROM ACHIZITIE ach
+    WHERE ach.status = 'Pending'
+    AND ach.id_produs = s.id_produs
 )
-AND s.id_stock = (
-    SELECT MIN(s2.id_stock)
-    FROM STOCK s2
-    WHERE s2.id_product = s.id_product
+AND s.id_stoc = (
+    SELECT MIN(s2.id_stoc)
+    FROM STOC s2
+    WHERE s2.id_produs = s.id_produs
 );
-
-UPDATE PURCHASE
+UPDATE ACHIZITIE
 SET status = 'Completed'
 WHERE status = 'Pending';
 --b)
-DELETE FROM STOCK
-WHERE quantity <= 0;
+DELETE FROM STOC
+WHERE cantitate <= 0;

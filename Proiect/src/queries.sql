@@ -1,111 +1,114 @@
---1 
-SELECT a.id_product, a.album_name
+--1
+SELECT a.id_produs, a.nume_album
 FROM ALBUM a
-WHERE a.id_product IN (
-    SELECT m.id_product
-    FROM MEDIA_FORMAT m
-    GROUP BY m.id_product
-    HAVING COUNT(DISTINCT m.id_media_format) >= 2
+WHERE a.id_produs IN (
+    SELECT m.id_produs
+    FROM FORMAT_MEDIA m
+    GROUP BY m.id_produs
+    HAVING COUNT(DISTINCT m.id_format_media) >= 2
 )
-AND a.id_product IN (
-    SELECT s.id_product
-    FROM STOCK s
-    GROUP BY s.id_product
-    HAVING COUNT(DISTINCT s.id_provider) >= 2
+AND a.id_produs IN (
+    SELECT s.id_produs
+    FROM STOC s
+    GROUP BY s.id_produs
+    HAVING COUNT(DISTINCT s.id_furnizor) >= 2
 );
 
 --2
-SELECT DISTINCT a.album_name, p.price, r.label_name
+SELECT DISTINCT a.nume_album, p.pret, r.nume_casa
 FROM ALBUM a
-JOIN PRODUCT p ON a.id_product = p.id_product
-JOIN RECORD_LABEL r ON a.id_record_label = r.id_record_label
-JOIN SONG s ON s.id_product = a.id_product
-JOIN ARTIST ar ON s.id_artist = ar.id_artist
-WHERE (ar.first_name LIKE 'K%' OR ar.last_name LIKE 'M%')
-  AND p.price > (
-      SELECT AVG(price) 
-      FROM PRODUCT 
-      WHERE id_product IN (SELECT id_product FROM ALBUM)
+JOIN PRODUS p ON a.id_produs = p.id_produs
+JOIN CASA_DE_DISCURI r ON a.id_casa_discuri = r.id_casa_discuri
+JOIN MELODIE mel ON mel.id_produs = a.id_produs 
+JOIN ARTIST ar ON mel.id_artist = ar.id_artist
+WHERE (ar.prenume LIKE 'K%' OR ar.nume_familie LIKE 'M%')
+  AND p.pret > (
+      SELECT AVG(pret)
+      FROM PRODUS
+      WHERE id_produs IN (SELECT id_produs FROM ALBUM)
   );
   
 --3
-SELECT fm.media_format_name, 
-       COUNT(a.id_product) AS album_count,
-       ROUND(AVG(p.price * (1 + fm.procent_added/100)), 2) AS pret_cu_adaos
+SELECT fm.nume_format_media,
+       COUNT(a.id_produs) AS numar_albume,
+       ROUND(AVG(p.pret * (1 + fm.procent_adaugat/100)), 2) AS pret_cu_adaos
 FROM ALBUM a
-JOIN PRODUCT p ON a.id_product = p.id_product
+JOIN PRODUS p ON a.id_produs = p.id_produs
 JOIN (
-    SELECT id_product, media_format_name, procent_added
-    FROM MEDIA_FORMAT
-    WHERE procent_added > 0
-) fm ON fm.id_product = a.id_product
-GROUP BY fm.media_format_name
+    SELECT id_produs, nume_format_media, procent_adaugat
+    FROM FORMAT_MEDIA
+    WHERE procent_adaugat > 0
+) fm ON fm.id_produs = a.id_produs
+GROUP BY fm.nume_format_media
 ORDER BY pret_cu_adaos DESC;
 
 --4
-SELECT g.genre_name, 
-       COUNT(DISTINCT a.id_product) AS numar_albume,
-       COUNT(s.id_song) AS numar_melodii,
-       ROUND(AVG(p.price), 2) AS pret_mediu
-FROM GENRE g
-JOIN ALBUM a ON g.id_album = a.id_product
-JOIN SONG s ON s.id_product = a.id_product
-JOIN PRODUCT p ON a.id_product = p.id_product
-GROUP BY g.genre_name
-HAVING COUNT(s.id_song) > (
-    SELECT AVG(numar_melodii) 
-    FROM (SELECT COUNT(*) AS numar_melodii FROM SONG GROUP BY id_product)
+SELECT g.nume_gen,
+       COUNT(DISTINCT a.id_produs) AS numar_albume,
+       COUNT(mel.id_melodie) AS numar_melodii, 
+       ROUND(AVG(p.pret), 2) AS pret_mediu
+FROM GEN g
+JOIN ALBUM a ON g.id_gen = a.id_gen 
+JOIN MELODIE mel ON mel.id_produs = a.id_produs 
+JOIN PRODUS p ON a.id_produs = p.id_produs
+GROUP BY g.nume_gen
+HAVING COUNT(mel.id_melodie) > (
+    SELECT AVG(numar_melodii_per_album)
+    FROM (
+        SELECT COUNT(id_melodie) AS numar_melodii_per_album
+        FROM MELODIE
+        GROUP BY id_produs 
+    )
 )
 ORDER BY numar_melodii DESC;
 
 --5
-SELECT 
-    c.last_name || ', ' || c.first_name AS customer_name,
-    c.city,
-    COUNT(p.id_purchase) AS purchase_count,
-    SUM(p.quantity) AS total_items,
-    NVL(SUM(p.quantity * pur.price), 0) AS total_spent,
-    NVL(MAX(TO_CHAR(p.purchase_date, 'YYYY-MM-DD')), 'Never purchased') AS last_purchase,
-    DECODE(COUNT(DISTINCT a.id_product), 0, 'New Here', 
-           CASE WHEN COUNT(DISTINCT a.id_product) > 2 THEN 'Music Lover'
-                ELSE 'Casual Listener' END) AS customer_type
-FROM CUSTOMER c
-LEFT JOIN PURCHASE p ON c.id_customer = p.id_customer
-LEFT JOIN PRODUCT pur ON p.id_product = pur.id_product
-LEFT JOIN ALBUM a ON p.id_product = a.id_product
-GROUP BY c.last_name, c.first_name, c.city
-ORDER BY purchase_count DESC, total_spent ASC;
-
+SELECT
+    c.nume_familie || ', ' || c.prenume AS nume_client,
+    c.oras,
+    COUNT(ach.id_achizitie) AS numar_achizitii,
+    SUM(ach.cantitate) AS total_articole,
+    NVL(SUM(ach.cantitate * prod.pret), 0) AS total_cheltuit,
+    NVL(MAX(TO_CHAR(ach.data_achizitie, 'YYYY-MM-DD')), 'Nicio achizitie') AS ultima_achizitie,
+    DECODE(COUNT(DISTINCT alb.id_produs), 0, 'Client nou',
+           CASE WHEN COUNT(DISTINCT alb.id_produs) > 2 THEN 'Meloman'
+                ELSE 'Ascultator ocazional' END) AS tip_client
+FROM CUMPARATOR c
+LEFT JOIN ACHIZITIE ach ON c.id_cumparator = ach.id_cumparator
+LEFT JOIN PRODUS prod ON ach.id_produs = prod.id_produs
+LEFT JOIN ALBUM alb ON prod.id_produs = alb.id_produs 
+GROUP BY c.nume_familie, c.prenume, c.oras
+ORDER BY numar_achizitii DESC, total_cheltuit ASC;
 --6
-WITH total_per_employee AS (
-    SELECT 
-        p.id_employee, 
-        SUM(pr.price * p.quantity) AS total_value
-    FROM PURCHASE p
-    JOIN PRODUCT pr ON p.id_product = pr.id_product
-    GROUP BY p.id_employee
+WITH total_vanzari_per_angajat AS (
+    SELECT
+        ach.id_angajat,
+        SUM(prod.pret * ach.cantitate) AS valoare_totala
+    FROM ACHIZITIE ach
+    JOIN PRODUS prod ON ach.id_produs = prod.id_produs
+    GROUP BY ach.id_angajat
 )
 SELECT *
 FROM (
-    SELECT 
-        e.first_name || ' ' || NVL(e.last_name, 'anonim') AS full_name,
-        f.function_name,
-        ROUND(t.total_value, 2) AS valoare_totala_vanzari,
-        CASE 
-            WHEN t.total_value > 1000 THEN 'Performant'
-            WHEN t.total_value > 500 THEN 'Activ'
+    SELECT
+        ang.prenume || ' ' || NVL(ang.nume_familie, 'anonim') AS nume_complet,
+        f.nume_functie,
+        ROUND(tva.valoare_totala, 2) AS valoare_totala_vanzari,
+        CASE
+            WHEN tva.valoare_totala > 1000 THEN 'Performant'
+            WHEN tva.valoare_totala > 500 THEN 'Activ'
             ELSE 'Slab activ'
         END AS categorie_angajat,
-        TO_CHAR(e.hire_date, 'Mon YYYY') AS angajat_din,
-        ROUND(e.salary * MONTHS_BETWEEN(SYSDATE, e.hire_date), 2) AS salariu_estimat_total
-    FROM EMPLOYEE e
-    JOIN FUNCTION f ON e.id_function = f.id_function
-    JOIN total_per_employee t ON e.id_employee = t.id_employee
+        TO_CHAR(ang.data_angajare, 'Mon YYYY', 'NLS_DATE_LANGUAGE=Romanian') AS angajat_din_luna,
+        ROUND(ang.salariu * MONTHS_BETWEEN(SYSDATE, ang.data_angajare), 2) AS salariu_estimat_total
+    FROM ANGAJAT ang
+    JOIN FUNCTIE f ON ang.id_functie = f.id_functie
+    JOIN total_vanzari_per_angajat tva ON ang.id_angajat = tva.id_angajat
     WHERE EXISTS (
-        SELECT 1 
-        FROM PURCHASE p 
-        WHERE p.id_employee = e.id_employee
+        SELECT 1
+        FROM ACHIZITIE ach_check
+        WHERE ach_check.id_angajat = ang.id_angajat
     )
-    ORDER BY t.total_value DESC
+    ORDER BY tva.valoare_totala DESC
 )
 WHERE ROWNUM <= 15;
