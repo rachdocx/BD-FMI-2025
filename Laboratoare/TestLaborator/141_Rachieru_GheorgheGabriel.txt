@@ -10,7 +10,7 @@ GROUP BY c.ID_CENTRU, c.NUME
 ORDER BY c.ID_CENTRU;
 --2
 SELECT ID_CENTRU, NUME, numar
-FROM (  SELECT c.ID_CENTRU, c.NUME, count(co.ID_CONTRACT) as numar
+FROM (  SELECT c.ID_CENTRU, c.NUME, count(co.ID_CONTRACT) AS numar
         FROM CENTRU_ADOPTIE c
         JOIN ANIMAL a ON c.ID_CENTRU = a.ID_CENTRU
         JOIN RASA r ON a.ID_RASA = r.ID_RASA
@@ -23,7 +23,7 @@ WHERE rownum<=( SELECT COUNT(ID_CLIENT)
                 FROM CLIENT_CENTRU
                 WHERE FLOOR((SYSDATE - DATA_NASTERII) / 365) <= 23);
  --3
-SELECT c.ID_CENTRU, c.NUME, count(distinct r.NUME_SPECIE) as numar_specii
+SELECT c.ID_CENTRU, c.NUME, count(distinct r.NUME_SPECIE) AS numar_specii
 FROM CENTRU_ADOPTIE c
 JOIN ANIMAL a ON c.ID_CENTRU = a.ID_CENTRU
 JOIN RASA r ON a.ID_RASA = r.ID_RASA
