@@ -15,18 +15,17 @@ AND a.id_produs IN (
 );
 
 --2
-SELECT DISTINCT a.nume_album, p.pret, r.nume_casa
+SELECT a.nume_album, p.pret, g.nume_gen
 FROM ALBUM a
 JOIN PRODUS p ON a.id_produs = p.id_produs
-JOIN CASA_DE_DISCURI r ON a.id_casa_discuri = r.id_casa_discuri
-JOIN MELODIE mel ON mel.id_produs = a.id_produs 
-JOIN ARTIST ar ON mel.id_artist = ar.id_artist
-WHERE (ar.prenume LIKE 'K%' OR ar.nume_familie LIKE 'M%')
-  AND p.pret > (
-      SELECT AVG(pret)
-      FROM PRODUS
-      WHERE id_produs IN (SELECT id_produs FROM ALBUM)
-  );
+JOIN GEN g ON a.id_gen = g.id_gen
+WHERE p.pret >= NVL((
+        SELECT AVG(p2.pret)
+        FROM ALBUM a2
+        JOIN PRODUS p2 ON a2.id_produs = p2.id_produs
+        JOIN MELODIE m2 ON a2.id_produs = m2.id_produs
+        JOIN ARTIST ar2 ON m2.id_artist = ar2.id_artist
+        WHERE a2.id_gen = g.id_gen AND ar2.trupa IS NOT NULL ), 0);
   
 --3
 SELECT fm.nume_format_media,
