@@ -70,8 +70,9 @@ SELECT
     NVL(SUM(ach.cantitate * prod.pret), 0) AS total_cheltuit,
     NVL(MAX(TO_CHAR(ach.data_achizitie, 'YYYY-MM-DD')), 'Nicio achizitie') AS ultima_achizitie,
     DECODE(COUNT(DISTINCT alb.id_produs), 0, 'Client nou',
-           CASE WHEN COUNT(DISTINCT alb.id_produs) > 2 THEN 'Meloman'
-                ELSE 'Ascultator ocazional' END) AS tip_client
+           CASE WHEN COUNT(DISTINCT alb.id_produs) > 1 THEN 'Ascultator frecvent'
+                ELSE 'Ascultator ocazional' END) AS tip_client,
+    COUNT(DISTINCT alb.id_produs)
 FROM CUMPARATOR c
 LEFT JOIN ACHIZITIE ach ON c.id_cumparator = ach.id_cumparator
 LEFT JOIN PRODUS prod ON ach.id_produs = prod.id_produs
