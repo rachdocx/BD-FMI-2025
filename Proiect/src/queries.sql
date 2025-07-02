@@ -15,18 +15,17 @@ AND a.id_produs IN (
 );
 
 --2
-SELECT DISTINCT a.nume_album, p.pret, r.nume_casa
+SELECT a.nume_album, p.pret, g.nume_gen
 FROM ALBUM a
 JOIN PRODUS p ON a.id_produs = p.id_produs
-JOIN CASA_DE_DISCURI r ON a.id_casa_discuri = r.id_casa_discuri
-JOIN MELODIE mel ON mel.id_produs = a.id_produs 
-JOIN ARTIST ar ON mel.id_artist = ar.id_artist
-WHERE (ar.prenume LIKE 'K%' OR ar.nume_familie LIKE 'M%')
-  AND p.pret > (
-      SELECT AVG(pret)
-      FROM PRODUS
-      WHERE id_produs IN (SELECT id_produs FROM ALBUM)
-  );
+JOIN GEN g ON a.id_gen = g.id_gen
+WHERE p.pret >= NVL((
+        SELECT AVG(p2.pret)
+        FROM ALBUM a2
+        JOIN PRODUS p2 ON a2.id_produs = p2.id_produs
+        JOIN MELODIE m2 ON a2.id_produs = m2.id_produs
+        JOIN ARTIST ar2 ON m2.id_artist = ar2.id_artist
+        WHERE a2.id_gen = g.id_gen AND ar2.trupa IS NOT NULL ), 0);
   
 --3
 SELECT fm.nume_format_media,
@@ -71,8 +70,9 @@ SELECT
     NVL(SUM(ach.cantitate * prod.pret), 0) AS total_cheltuit,
     NVL(MAX(TO_CHAR(ach.data_achizitie, 'YYYY-MM-DD')), 'Nicio achizitie') AS ultima_achizitie,
     DECODE(COUNT(DISTINCT alb.id_produs), 0, 'Client nou',
-           CASE WHEN COUNT(DISTINCT alb.id_produs) > 2 THEN 'Meloman'
-                ELSE 'Ascultator ocazional' END) AS tip_client
+           CASE WHEN COUNT(DISTINCT alb.id_produs) > 1 THEN 'Ascultator frecvent'
+                ELSE 'Ascultator ocazional' END) AS tip_client,
+    COUNT(DISTINCT alb.id_produs)
 FROM CUMPARATOR c
 LEFT JOIN ACHIZITIE ach ON c.id_cumparator = ach.id_cumparator
 LEFT JOIN PRODUS prod ON ach.id_produs = prod.id_produs
